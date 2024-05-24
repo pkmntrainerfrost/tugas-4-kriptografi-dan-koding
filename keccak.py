@@ -107,9 +107,9 @@ def iota(input, round):
     return output
 
 # Operasi pengubahan bentuk input dari string menjadi array biner
-def toBinary(str):
+def toBinary(plain):
     num,two,res = [],[],[]
-    for i in str:
+    for i in plain:
         num.append(ord(i))
     for j in num:
         two.append(bin(j)[2:])
@@ -121,8 +121,8 @@ def toBinary(str):
     return res
 
 # Algoritma SHA-3
-def sha3(str, cut, padding = True):
-    M = toBinary(str)
+def sha3(plain, cut, padding = True):
+    M = toBinary(plain)
     l = len(M)
 
     # Mengubah M menjadi np.array dan mengubah ukurannya
@@ -133,7 +133,7 @@ def sha3(str, cut, padding = True):
     pad = 1600 - cut
     if padding:
         if l > pad:
-            sys.exit("Input harus berukuran <= "+pad+" bit.")
+            exit("Input harus berukuran <= "+str(pad)+" bit.")
         P[l] = 1
         P[pad+1] = 1
 
@@ -149,4 +149,5 @@ def sha3(str, cut, padding = True):
     return res
 
 # Test drive
-print(sha3("halo", 256))
+if __name__ == "__main__":
+    print(sha3("halo", 256))
