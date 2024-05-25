@@ -550,7 +550,7 @@ class Ui_Dialog(QtWidgets.QDialog):
 
         result = []
         for index, row in self.database_matakuliah.iterrows():
-            concatenated_string = " ".join([f"{row["Kode"]} -  {row["Nama"]} - {row["SKS"]} SKS" ])
+            concatenated_string = " ".join([f'{row["Kode"]} -  {row["Nama"]} - {row["SKS"]} SKS'])
             result.append(concatenated_string)
 
 
