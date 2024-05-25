@@ -4,9 +4,11 @@
 import pandas as pd
 from sys import exit
 from keccak import sha3
+import pyAesCrypt
 import rsa
 import glob
 import os.path
+import pdfkit
 
 # REFERENCE
 header = [  "NIM","Nama",
@@ -148,7 +150,26 @@ def verifikasiSign(nim, useHex=True):
     # print(hashed)
     print("Verifikasi berhasil." if decrypted == hashed else "Data tidak tervalidasi integritasnya.")
 
+def enkripsiPDF(key, path : str):
+    output = path+".enc"
+    pyAesCrypt.encryptFile(path, output, key)
+    print("File berhasil dienkripsi dan disimpan sebagai "+output+".")
+
+def dekripsiPDF(key, path : str):
+    name = path.split(".")
+    output = name[0]+"dec."+name[1]
+    pyAesCrypt.decryptFile(path, output, key)
+    print("File "+path+" berhasil didekripsi dan disimpan sebagai "+output+".")
+
+def downloadTranskrip(key, nim):
+    save_as = "transkrip_"+nim+".pdf"
+    pdfkit.from_file("transkrip.html", save_as)
+    enkripsiPDF(key, save_as)
+    if os.path.exists(save_as):
+        os.remove(save_as)
+
+
 # loadKunci()
 # verifikasiSign(18218000)
-
-# addToDatabase(data)
+# downloadTranskrip("PERSONA3RELOAD","18218000")
+dekripsiPDF("PERSONA3RELOAD", "transkrip_18218000.pdf.enc")
