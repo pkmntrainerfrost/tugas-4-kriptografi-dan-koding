@@ -620,7 +620,7 @@ class Ui_Dialog(QtWidgets.QDialog):
 
         sign = rsa.rsaEncryptText(str(s.hexdigest()) + "   ",self.parent.rsa_keys["private"])
 
-        public_key = f"e={self.parent.rsa_keys["public"]["e"]};n={self.parent.rsa_keys["public"]["n"]}"
+        public_key = f'e={self.parent.rsa_keys["public"]["e"]};n={self.parent.rsa_keys["public"]["n"]}'
 
         final = final + [sign, public_key]
         
