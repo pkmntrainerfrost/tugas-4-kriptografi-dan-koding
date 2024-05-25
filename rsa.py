@@ -96,7 +96,7 @@ def rsaEncrypt(m : int, public_key : dict):
     
     return (pow(m,public_key["e"]) % public_key["n"])
 
-def rsaEncryptText(m : str, public_key : dict):
+def rsaEncryptText(m : str, public_key : dict, useHex : bool):
 
     m_bytes = m.encode("utf-8")
     m_numbers_string = ""
@@ -118,7 +118,12 @@ def rsaEncryptText(m : str, public_key : dict):
         result = (str(i).zfill(len(str(public_key["n"]))))
         m_numbers_encrypted_padded.append(result)
 
-    result = base64.b64encode(''.join(m_numbers_encrypted_padded).encode('utf-8')).decode("utf-8")
+    if(useHex):
+        result = ''.join(m_numbers_encrypted_padded)
+        result = hex(int(result))[2:]
+    else:
+        result = base64.b64encode(''.join(m_numbers_encrypted_padded).encode('utf-8')).decode("utf-8")
+    
     return result
 
 def rsaEncryptBytes(m : list, public_key : dict):
@@ -155,9 +160,14 @@ def rsaDecrypt(c : int, private_key : dict):
     
     return (pow(c,private_key["d"]) % private_key["n"])
 
-def rsaDecryptText(c : str, private_key : dict):
+def rsaDecryptText(c : str, private_key : dict, useHex : bool):
 
-    c_bytes = base64.b64decode(c).decode("utf-8")
+    if(useHex):
+        if(len(c)%8 != 0):
+            c_bytes = '0'+str(int("0x"+c,0))
+    else:
+        c_bytes = base64.b64decode(c).decode("utf-8")
+        print(c_bytes)
     c_numbers_string = ""
 
     for byte in c_bytes:
