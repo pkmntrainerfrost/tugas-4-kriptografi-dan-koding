@@ -886,6 +886,8 @@ class Ui_Dialog2(QtWidgets.QDialog):
         row = pd.DataFrame([final], columns=self.parent.database_matakuliah.columns)
 
         self.parent.database_matakuliah = pd.concat([self.parent.database_matakuliah, row], ignore_index=True)
+
+        self.parent.database_matakuliah.to_csv("db/matkul.csv",index=False)
     
 class Ui_Dialog_3(object):
     def setupUi(self, Dialog,parent):
