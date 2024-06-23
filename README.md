@@ -17,8 +17,17 @@ Program ini merupakan program basis data transkrip nilai sederhana yang memiliki
     > venv/Scripts/activate
 4. Lakukan instalasi modul yang diperlukan untuk aplikasi ini dengan menjalankan kode ini:
     > pip install pyqt6 pyqt6-tools sympy pdfkit pandas pyaescrypt
+5. Install wkhtmltopdf dari tautan [berikut ini](https://wkhtmltopdf.org/downloads.html).
 
 ## Bagian 2: Eksekusi dan Penggunaan
 1. Jalankan file main.py dengan menggunakan kode berikut:
     > py main.py
 2. Program akan menampilkan sebuah window baru berisi basis data.
+3. Di menu "Data", lakukan dekripsi dengan kunci "Test" dan "Test". Sebagai alternatif, hapus entri dari csv secara manual sebelum menjalankan program.
+4. Bangkitkan kunci RSA untuk digital signature di menu "RSA".
+5. Tambahkan mahasiswa dengan tombol di kanan bawah. Jika sudah berhasil, Data dapat diekspor sebagai PDF dan diverifikasi tanda tangannya.
+6. Simpan data dengan melakukan enkripsi menggunakan tombol sesuai di menu "Data".
+
+## Batasan
+- Basis data harus dalam status terdekripsi untuk menambahkan data
+- Data tidak tersimpan sampai dilakukan enkripsi
