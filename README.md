@@ -21,5 +21,4 @@ Program ini merupakan program basis data transkrip nilai sederhana yang memiliki
 ## Bagian 2: Eksekusi dan Penggunaan
 1. Jalankan file main.py dengan menggunakan kode berikut:
     > py main.py
-2. Program akan menampilkan sebuah window baru berisi GUI layar percakapan.
-3. Selamat mencoba simulasi percakapan/chat menggunakan algoritma RSA.
+2. Program akan menampilkan sebuah window baru berisi basis data.
