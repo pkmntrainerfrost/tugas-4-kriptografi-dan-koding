@@ -4,17 +4,7 @@
 - 18221102 Salman Ma'arif Achsien
 
 # Deskripsi Tugas 
-Mahasiswa ditugaskan untuk sebuah program yang mengaplikasikan penggunaan algoritma RSA untuk simulasi enkripsi/dekripsi pesan pada aplikasi chat/instant messaging. Algoritma ini dijalankan melalui perantara GUI dengan bahasa pemrograman yang dibebaskan. Mahasiswa diharapkan membuat algoritma RSA sendiri tanpa menggunakan library apapun kecuali **tes bilangan prima**, **invers modulo**, maupun library lain yang tidak berhubungan dengan kriptografi. 
-Konsep yang digunakan untuk program kali ini adalah GUI berupa layout aplikasi dengan tampilan dua pengguna berbeda (Alice dan Bob) beserta kunci privat dan kunci publik yang dibangkitkan secara acak menggunakan algoritma RSA.
-
-# Spesifikasi
-- Program dapat menerima _message_ (ke depannya disebut _plaintext_) berupa teks yang diketikkan dari _keyboard_ atau file sembarang.
-- Program dapat mengenkripsi _plaintext_ menggunakan RSA.
-- Program dapat mendekripsi _ciphertext_ menjadi _plaintext_ semula menggunakan RSA sehingga dapat dibuka atau diinterpretasikan seperti semula sebelum enkripsi.
-- Program akan menampilkan _plaintext_ dan _ciphertext_ di layar percakapan. Hal ini tidak terjadi bagi _plaintext_ atau _ciphertext_ berupa file attachment (hanya akan ditampilkan pesan notifikasi pengiriman dan penerimaan file).
-- Program dapat menyimpan file kiriman pengguna ke dalam file sembarang dalam direktori tertentu. Pengguna juga dapat memilih untuk mendekripsi file _ciphertext_ sebelum disimpan dalam direktori.
-- Pembangkitan kunci dari algoritma RSA terotomatisasi dan dilakukan secara acak serta disimpan dalam sebuah folder direktori tertentu.
-- Proses enkripsi dan dekripsi dapat menggunakan kunci RSA yang sudah pernah dibangkitkan atau dari input pengguna.
+Program ini merupakan program basis data transkrip nilai sederhana yang memiliki fitur enkripsi dengan modified RC4, digital signature dengan RSA dan SHA-3, serta export laporan terenkripsi menggunakan AES.
 
 # Cara Menjalankan Aplikasi pada Windows OS
 ## Bagian 1: Persiapan dan Instalasi
@@ -26,11 +16,18 @@ Konsep yang digunakan untuk program kali ini adalah GUI berupa layout aplikasi d
 3. Jalankan _virtual environment_ yang baru saja dibuat dengan menggunakan kode berikut:
     > venv/Scripts/activate
 4. Lakukan instalasi modul yang diperlukan untuk aplikasi ini dengan menjalankan kode ini:
-    > pip install pyqt6 pyqt6-tools sympy
-    - Modul **pyqt6** digunakan untuk membangun GUI layar menggunakan Qt6 untuk Python.
-    - Modul **sympy** digunakan untuk membangkitkan bilangan prima yang akan digunakan pada pembangkitan kunci RSA.
+    > pip install pyqt6 pyqt6-tools sympy pdfkit pandas pyaescrypt
+5. Install wkhtmltopdf dari tautan [berikut ini](https://wkhtmltopdf.org/downloads.html).
+
 ## Bagian 2: Eksekusi dan Penggunaan
-1. Jalankan file chat.py dengan menggunakan kode berikut:
-    > py chat.py
-2. Program akan menampilkan sebuah window baru berisi GUI layar percakapan.
-3. Selamat mencoba simulasi percakapan/chat menggunakan algoritma RSA.
+1. Jalankan file main.py dengan menggunakan kode berikut:
+    > py main.py
+2. Program akan menampilkan sebuah window baru berisi basis data.
+3. Di menu "Data", lakukan dekripsi dengan kunci "Test" dan "Test". Sebagai alternatif, hapus entri dari csv secara manual sebelum menjalankan program.
+4. Bangkitkan kunci RSA untuk digital signature di menu "RSA".
+5. Tambahkan mahasiswa dengan tombol di kanan bawah. Jika sudah berhasil, Data dapat diekspor sebagai PDF dan diverifikasi tanda tangannya.
+6. Simpan data dengan melakukan enkripsi menggunakan tombol sesuai di menu "Data".
+
+## Batasan
+- Basis data harus dalam status terdekripsi untuk menambahkan data
+- Data tidak tersimpan sampai dilakukan enkripsi
