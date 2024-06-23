@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.tableWidget.itemClicked.connect(self.on_item_clicked)  
 
         
-
+        self.actionSuccess = False
         self.decrypted = False
         self.rsa_keys_added = False
         
@@ -80,6 +80,7 @@ class Ui_MainWindow(object):
         self.actionLoad_Kunci_RSA.triggered.connect(self.loadKey)
         self.actionDekripsi_Laporan = QtGui.QAction(parent=MainWindow)
         self.actionDekripsi_Laporan.setObjectName("actionDekripsi_Laporan")
+        self.actionDekripsi_Laporan.triggered.connect(self.decryptPDF)
         self.menuFile.addAction(self.actionTambah_Mata_Kuliah)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionEnkripsi_Basis_Data)
@@ -150,18 +151,25 @@ class Ui_MainWindow(object):
         msg = QtWidgets.QMessageBox.information(None,f"Kunci RSA Berhasil Dibangkitkan!",f"Kunci RSA baru telah dibangkitkan untuk kaprodi! Kunci telah disimpan sebagai {filename}.")
     
     def encrypt(self):
+        self.actionSuccess = False
+        
         dialog = QtWidgets.QDialog()
         dialog.ui = Ui_Dialog_3()
         dialog.ui.setupUi(dialog,self)
         dialog.exec()
-        self.tableWidget.setDisabled(True)
+        if self.actionSuccess:
+            self.tableWidget.setDisabled(True)
 
     def decrypt(self):
+        self.actionSuccess = False
         dialog = QtWidgets.QDialog()
         dialog.ui = Ui_Dialog_4()
         dialog.ui.setupUi(dialog,self)
         dialog.exec()
-        self.tableWidget.setDisabled(False)
+        if self.actionSuccess:
+            self.tableWidget.setDisabled(False)
+            if not self.rsa_keys_added:
+                self.pushButton.setDisabled(True)
 
     def openAddStudentDialog(self):
         dialog = QtWidgets.QDialog()
@@ -207,20 +215,63 @@ class Ui_MainWindow(object):
         with open('temp.html', 'w') as file:
             file.write(html_content)
         pdfkit.from_file("temp.html", save_as)
-        self.enkripsiPDF("TEST", save_as)
+        self.enkripsiPDF("", save_as)
         if os.path.exists(save_as):
             os.remove(save_as)
         if os.path.exists("temp.html"):
             os.remove("temp.html")
 
     def enkripsiPDF(self,key, path : str):
-        output = path+".enc"
-        pyAesCrypt.encryptFile(path, output, key)
-        print("File berhasil dienkripsi dan disimpan sebagai "+output+".")
+
+        try:
+
+            aes_key, done1 = QtWidgets.QInputDialog.getText(None,'Input Dialog', 'Masukkan kunci AES:') 
+
+            if done1:
+
+                output = path+".enc"
+                pyAesCrypt.encryptFile(path, output, aes_key)
+                print("File berhasil dienkripsi dan disimpan sebagai "+output+".")
+                msg = QtWidgets.QMessageBox.information(None,f"Export berhasil!",f"File berhasil dienkripsi dan disimpan sebagai "+output+".")
+
+            else:
+
+                raise Exception
+
+        except:
+
+            msg = QtWidgets.QMessageBox.information(None,f"Error!",f"Terjadi kesalahan dalam melakukan export.")
+
+        
+        
+
+    def decryptPDF(self):
+
+        filename = QtWidgets.QFileDialog.getOpenFileName(None,"Pilih file",filter="enc(*.enc)")[0]
+
+        try:
+
+            if filename:
+
+                aes_key, done1 = QtWidgets.QInputDialog.getText(None,'Input Dialog', 'Masukkan kunci AES:') 
+
+            if done1 and filename:
+
+                    self.dekripsiPDF(aes_key,filename)
+                    msg = QtWidgets.QMessageBox.information(None,f"Dekripsi berhasil!",f"Dekripsi berhasil dilakukan.")
+
+            else:
+
+                raise Exception       
+            
+                       
+        except:
+
+            msg = QtWidgets.QMessageBox.information(None,f"Error!",f"Terjadi kesalahan dalam melakukan dekripsi.")
 
     def dekripsiPDF(self,key, path : str):
         name = path.split(".")
-        output = name[0]+"dec."+name[1]
+        output = name[0]+"dec.pdf"
         pyAesCrypt.decryptFile(path, output, key)
         print("File "+path+" berhasil didekripsi dan disimpan sebagai "+output+".")
 
@@ -512,6 +563,12 @@ class Ui_Dialog(QtWidgets.QDialog):
         self.comboBox_8.setGeometry(QtCore.QRect(370, 210, 51, 32))
         self.comboBox_8.setObjectName("comboBox_8")
         self.comboBox_8.addItem("")
+        self.comboBox_8.addItem("")
+        self.comboBox_8.addItem("")
+        self.comboBox_8.addItem("")
+        self.comboBox_8.addItem("")
+        self.comboBox_8.addItem("")
+        self.comboBox_8.addItem("")
         self.comboBox_9 = QtWidgets.QComboBox(parent=Dialog)
         self.comboBox_9.setGeometry(QtCore.QRect(80, 250, 281, 32))
         self.comboBox_9.setObjectName("comboBox_9")
@@ -656,7 +713,7 @@ class Ui_Dialog(QtWidgets.QDialog):
             matkul.append(mk[2].split(" ")[0])
             sks += int(mk[2].split(" ")[0])
 
-        final = [nim, nama] + matkul + [str(total), str(round(total/sks,2))]
+        final = [nim, nama] + matkul + [str(sks), str(round(total/sks,2))]
 
         s = hashlib.sha3_256()
         s.update(bytes("".join(final),"utf-8"))
@@ -887,12 +944,13 @@ class Ui_Dialog_3(object):
         for i in range(self.parent.database_transkrip.shape[0]):
             for j in range(self.parent.database_transkrip.shape[1]):
                 self.parent.database_transkrip.iat[i, j] = rc4.base64Encrypt(rc4.rc4(self.parent.database_transkrip.iat[i, j],self.lineEdit_2.text(),self.lineEdit.text()))
-                
         self.parent.update_data()
         self.parent.pushButton.setDisabled(True)
         self.parent.actionEnkripsi_Basis_Data.setDisabled(True)
         self.parent.actionDekripsi_Basis_Data.setDisabled(False)
         self.parent.database_transkrip.to_csv("db/nilai_mahasiswa.csv",index=False)
+        self.parent.database_matakuliah.to_csv("db/matkul.csv",index=False)
+        self.parent.actionSuccess = True
 
 class Ui_Dialog_4(object):
     def setupUi(self, Dialog,parent):
@@ -956,6 +1014,7 @@ class Ui_Dialog_4(object):
         self.parent.pushButton.setDisabled(False)
         self.parent.actionEnkripsi_Basis_Data.setDisabled(False)
         self.parent.actionDekripsi_Basis_Data.setDisabled(True)
+        self.parent.actionSuccess = True
 
 
 if __name__ == "__main__":

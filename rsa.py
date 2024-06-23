@@ -7,6 +7,9 @@ import random
 import base64
 import time
 import os
+import pyAesCrypt
+import pdfkit
+
 
 # Pembangkit kunci - mengembalikan pasangan kunci publik dan kunci privat
 def rsaGenerateKeyPair( p : int = 0, q : int = 0, e : int = 0):
